@@ -1,0 +1,18 @@
+{
+  "name": "sprint",
+  "version": "1.0.0",
+  "description": "server for sprint",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "ian",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.13.4",
+    "http": "0.0.0",
+    "twitter": "^1.3.0",
+    "ws": "^1.1.0"
+  }
+}
