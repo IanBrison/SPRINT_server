@@ -76,9 +76,14 @@ wss.on('connection', function(ws){
             break;
           case "list":
             jsonObject.data = "";
+            var list_num = 0;
             todo_list.forEach(function(obj, i){
               jsonObject.data += obj.name + " " + obj.detail + "\t";
+              list_num++;
             });
+            if(list_num == 0){
+              jsonObject.data = "todo empty";
+            }
             broadcast(JSON.stringify(jsonObject));
             break;
         }
