@@ -76,11 +76,16 @@ wss.on('connection', function(ws){
             break;
           case "list":
             jsonObject.data = "";
-            var list_num = 0;
-            todo_list.forEach(function(obj, i){
+            var list_num = todo_list.length;
+            for(var i = 0; i < list_num; i++){
+              jsonObject.data += todo_list[i].name + " " + todo_list[i].detail;
+              if(i != list_num - 1)
+                jsonObject.data += "\n";
+            }
+            /*todo_list.forEach(function(obj, i){
               jsonObject.data += obj.name + " " + obj.detail + "\n";
               list_num++;
-            });
+            });*/
             if(list_num == 0){
               jsonObject.data = "todo empty";
             }
