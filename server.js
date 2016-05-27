@@ -78,7 +78,7 @@ wss.on('connection', function(ws){
             jsonObject.data = "";
             var list_num = 0;
             todo_list.forEach(function(obj, i){
-              jsonObject.data += obj.name + " " + obj.detail + "\t";
+              jsonObject.data += obj.name + " " + obj.detail + "\n";
               list_num++;
             });
             if(list_num == 0){
