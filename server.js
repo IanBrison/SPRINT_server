@@ -35,10 +35,13 @@ wss.on('connection', function(ws){
   connectedClients.push(ws);
   console.log(connectedClients.length + " clients connected");
 
-  var first_message = "";
-  var first_obj = {};
-  first_obj.data = first_message;
-  ws.send(JSON.stringify(first_obj));
+  var message_obj = {};
+  var first_message = "こんにちは！私の名前は、かんな。女子高生です（＾◇＾）一緒にお話ししましょ";
+  var second_message = "bot talk xxxって打ってくれたらxxxの内容が私のところに届くよ♡♡";
+  message_obj.data = first_message;
+  ws.send(JSON.stringify(message_obj));
+  message_obj.data = second_message;
+  ws.send(JSON.stringify(message_obj));
 
   var todo_list = [];
 
