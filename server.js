@@ -13,7 +13,7 @@ var twitter = new twitter_re({
   consumer_secret: 'uARS8SUkICqbBXHR7hDdetr1OZ8Ec0TLn3MRAEaIAkZTjTvzbw',
   access_token_key: '734757680053551105-nUxLBqNEd81TwCZj0cL9J0hsvz5YqFg',
   access_token_secret: 'rHaaE3WOrrLDMt5tuS8RGv5sWBiz89lydf7bwo6lM4o4p'
-})
+});
 
 
 app.use(express.static('sprint'));
@@ -46,12 +46,14 @@ wss.on('connection', function(ws){
     broadcast(JSON.stringify(jsonObject));
 
     var message_split_array = message.split(' ');
-    if(message_split_array[0] == "bot"){
-      if(message_split_array[1] == "ping"){
+    if(message_split_array[0] == "bot"){//最初にbotがあるもの以外無視
+
+      if(message_split_array[1] == "ping"){//pingが来た場合
         jsonObject.data = 'pong';
         broadcast(JSON.stringify(jsonObject));
       }
-      else if(message_split_array[1] == "todo"){
+
+      else if(message_split_array[1] == "todo"){//todoが来た場合
         switch (message_split_array[2]) {
           case "add":
             if(message_split_array[3] != null && message_split_array[3] != ""){
@@ -82,22 +84,19 @@ wss.on('connection', function(ws){
               if(i != list_num - 1)
                 jsonObject.data += "\n";
             }
-            /*todo_list.forEach(function(obj, i){
-              jsonObject.data += obj.name + " " + obj.detail + "\n";
-              list_num++;
-            });*/
             if(list_num == 0){
               jsonObject.data = "todo empty";
             }
             broadcast(JSON.stringify(jsonObject));
             break;
-        }
-      }else if(message_split_array[1] == "talk"){
+          }
+      }
+
+      else if(message_split_array[1] == "talk"){//オリジナルコマンドのtalkが来た場合
         var tweetjson = {};
         var tweet_message =message_split_array[2];
         tweetjson.status = "@ms_rinna " + tweet_message;
         twitter.__request('post', '/statuses/update', tweetjson, function(error, data, response){
-          console.log("1");
           console.log(data);
           console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           console.log(error);
@@ -106,17 +105,15 @@ wss.on('connection', function(ws){
             var tweet_id = data.id;
             setTimeout(function(){
               twitter.__request('get', '/statuses/mentions_timeline', {include_entities:true}, function(error2, tweets, response2) {
-                for(var n = 0; n < 3; n++){
-                  if(tweets[n].in_reply_to_status_id == tweet_id){
-                    console.log(tweets[n]);
-                    jsonObject.data = tweets[n].text.substr(14);
-                    jsonObject.id = "JK : ";
-                    broadcast(JSON.stringify(jsonObject));
-                    tweet_id = 0;
-                  }
+                if(tweets[0].in_reply_to_status_id == tweet_id){
+                  console.log(tweets[0]);
+                  jsonObject.data = tweets[0].text.substr(14);
+                  jsonObject.id = "JK : ";
+                  broadcast(JSON.stringify(jsonObject));
+                  tweet_id = 0;
                 }
                 if(tweet_id != 0){
-                  var no_reply = "だまれ";
+                  var no_reply = "うーん、よくわかんない";
                   console.log(no_reply);
                   jsonObject.data = no_reply;
                   jsonObject.id = "JK : ";
@@ -125,7 +122,7 @@ wss.on('connection', function(ws){
               });
             }, 3000);
           }else{
-            jsonObject.data = "その話つまんない！話変えてよ！";
+            jsonObject.data = "はいはい。その話いいからもっとおもしろい話してよ！";
             jsonObject.id = "JK : ";
             broadcast(JSON.stringify(jsonObject));
           }
@@ -144,11 +141,7 @@ wss.on('connection', function(ws){
 
 });
 
-function wait(time){
-
-}
-
-function broadcast(message){
+function broadcast(message){//全員に送るメソッド
   connectedClients.forEach(function(con, i){
     con.send(message);
   });
