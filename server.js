@@ -35,14 +35,6 @@ wss.on('connection', function(ws){
   connectedClients.push(ws);
   console.log(connectedClients.length + " clients connected");
 
-  var message_obj = {};
-  var first_message = "こんにちは！私の名前は、かんな。女子高生です（＾◇＾）一緒にお話ししましょ";
-  var second_message = "bot talk xxxって打ってくれたらxxxの内容が私のところに届くよ♡♡";
-  message_obj.data = first_message;
-  ws.send(JSON.stringify(message_obj));
-  message_obj.data = second_message;
-  ws.send(JSON.stringify(message_obj));
-
   var todo_list = [];
 
   ws.on('message', function(message){
@@ -102,7 +94,7 @@ wss.on('connection', function(ws){
 
       else if(message_split_array[1] == "talk"){//オリジナルコマンドのtalkが来た場合
         var tweetjson = {};
-        var tweet_message =message_split_array[2].replace("かんな", "りんな");
+        var tweet_message =message_split_array[2].replace("あやな", "りんな");
         tweetjson.status = "@ms_rinna " + tweet_message;
         twitter.__request('post', '/statuses/update', tweetjson, function(error, data, response){
           console.log(data);
@@ -115,7 +107,7 @@ wss.on('connection', function(ws){
               twitter.__request('get', '/statuses/mentions_timeline', {include_entities:true}, function(error2, tweets, response2) {
                 if(tweets[0].in_reply_to_status_id == tweet_id){
                   console.log(tweets[0]);
-                  jsonObject.data = tweets[0].text.substr(14).replace("りんな", "かんな").replace("bot_for_SPRINTさん", "あなた");
+                  jsonObject.data = tweets[0].text.substr(14).replace("りんな", "あやな").replace("bot_for_SPRINTさん", "あなた");
                   jsonObject.id = "JK : ";
                   broadcast(JSON.stringify(jsonObject));
                   tweet_id = 0;
@@ -135,6 +127,16 @@ wss.on('connection', function(ws){
             broadcast(JSON.stringify(jsonObject));
           }
         });
+      }
+
+      else if(message_split_array[1] == "help"){
+        var message_obj = {};
+        var first_message = "こんにちは！私は女子高生のあやなです（＾◇＾）一緒にお話ししましょ";
+        var second_message = "bot talk xxxって打ってくれたらxxxの内容が私のところに届くよ♡♡";
+        message_obj.data = first_message;
+        ws.send(JSON.stringify(message_obj));
+        message_obj.data = second_message;
+        ws.send(JSON.stringify(message_obj));
       }
 
     }
